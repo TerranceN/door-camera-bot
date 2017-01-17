@@ -41,10 +41,14 @@ defmodule Example.Router do
             send_resp(conn, 200, challenge)
         _ ->
             json_string = Poison.encode!(json)
-            {is_ok, json_try} = Poison.decode(json_string, as: %Response{entry: [%Entry{messaging: [%MessageRepr{message: %Message{}}]}]})
-
-            if is_ok do
-              Logger.info hd(hd(json_try.entry).messaging).message.text
+            result = Poison.decode(json_string, as: %Response{entry: [%Entry{messaging: [%MessageRepr{message: %Message{text: nil}}]}]})
+            case result do
+              {:ok, %Response{entry: nil}} -> nil
+              {:ok, json_structs} ->
+                if Map.has_key?(json_structs, :entry) do
+                  Logger.info hd(hd(json_structs.entry).messaging).message.text
+                end
+              _ -> nil
             end
 
             send_resp(conn, 200, json_string)
