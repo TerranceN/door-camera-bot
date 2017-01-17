@@ -15,11 +15,16 @@ defmodule Example.Router do
     #json = Plug.Parsers.parse(conn, "application/json", "json", [])
     #json = Plug.params
     json = conn.params
-    json_string = Poison.encode!(json)
+    case json do
+        %{"hub.challenge" => challenge} ->
+            send_resp(conn, 200, challenge)
+        _ ->
+            json_string = Poison.encode!(json)
 
-    Logger.info json_string
+            Logger.info json_string
 
-    send_resp(conn, 200, json_string)
+            send_resp(conn, 200, json_string)
+    end
   end
 
   get "/", do: send_resp(conn, 200, "Welcome")
