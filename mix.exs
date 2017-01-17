@@ -16,7 +16,7 @@ defmodule DoorCameraBot.Mixfile do
   def application do
     [
       mod: {Example, []},
-      applications: [:logger, :cowboy, :plug, :poison],
+        applications: [:logger, :cowboy, :plug, :poison, :morphix],
       env: [cowboy_port: 4000]
     ]
   end
@@ -33,6 +33,8 @@ defmodule DoorCameraBot.Mixfile do
   defp deps do
     [{:cowboy, "~> 1.0.0"},
      {:plug, "~> 1.0"},
-     {:poison, "~> 1.0"}]
+     {:poison, "~> 3.1"},
+     {:morphix, "~> 0.0.4"},
+     {:apex, "~>0.7.0"}]
   end
 end

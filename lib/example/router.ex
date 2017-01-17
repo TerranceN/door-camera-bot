@@ -1,3 +1,27 @@
+defmodule TextMessage do
+  defstruct seq: nil, text: nil
+end
+
+defmodule Response do
+  @derive [Poison.Encoder]
+  defstruct [:object, :entry]
+end
+
+defmodule Entry do
+  @derive [Poison.Encoder]
+  defstruct [:time, :messaging, :id]
+end
+
+defmodule MessageRepr do
+  @derive[Poison.Encoder]
+  defstruct [:message]
+end
+
+defmodule Message do
+  @derive [Poison.Encoder]
+  defstruct [:seq, :text, :attachments]
+end
+
 defmodule Example.Router do
   require Logger
   use Plug.Router
@@ -11,17 +35,17 @@ defmodule Example.Router do
 
   match "/json_test" do
     conn = Plug.Conn.fetch_query_params(conn)
-    #json = %{person: %{name: "Devin Torres", age: 27}}
-    #json = Plug.Parsers.parse(conn, "application/json", "json", [])
-    #json = Plug.params
     json = conn.params
     case json do
         %{"hub.challenge" => challenge} ->
             send_resp(conn, 200, challenge)
         _ ->
             json_string = Poison.encode!(json)
+            {is_ok, json_try} = Poison.decode(json_string, as: %Response{entry: [%Entry{messaging: [%MessageRepr{message: %Message{}}]}]})
 
-            Logger.info json_string
+            if is_ok do
+              Logger.info hd(hd(json_try.entry).messaging).message.text
+            end
 
             send_resp(conn, 200, json_string)
     end
