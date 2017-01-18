@@ -3,17 +3,23 @@ defmodule Example do
   use Application
 
   def start(_type, _args) do
-    port = Application.get_env(:example, :door_camera_bot, 4000)
+    port = Application.get_env(:door_camera_bot, :cowboy_port, 4000)
 
-    children = [
-      Plug.Adapters.Cowboy.child_spec(:http, Example.Router, [], port: port)
-    ]
+    page_access_token = Application.get_env(:door_camera_bot, :page_access_token)
 
-    Logger.info "Started application"
+    if page_access_token != nil do
+      children = [
+        Plug.Adapters.Cowboy.child_spec(:http, Example.Router, [], port: port)
+      ]
+      Logger.info "Started application"
 
-    Supervisor.start_link(children, strategy: :one_for_one)
+      Supervisor.start_link(children, strategy: :one_for_one)
 
-    IO.gets ""
+      IO.gets ""
+    else
+      Logger.info "ERROR: invalid page_access_token: \"#{page_access_token}\""
+    end
+    
     Logger.info "Exiting..."
   end
 end

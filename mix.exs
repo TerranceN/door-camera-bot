@@ -15,9 +15,7 @@ defmodule DoorCameraBot.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      mod: {Example, []},
-        applications: [:logger, :cowboy, :plug, :poison, :morphix],
-      env: [cowboy_port: 4000]
+      mod: {Example, []}, applications: [:logger, :cowboy, :plug, :poison, :httpotion]
     ]
   end
 
@@ -34,7 +32,6 @@ defmodule DoorCameraBot.Mixfile do
     [{:cowboy, "~> 1.0.0"},
      {:plug, "~> 1.0"},
      {:poison, "~> 3.1"},
-     {:morphix, "~> 0.0.4"},
-     {:apex, "~>0.7.0"}]
+     {:httpotion, "~>3.0.2"}]
   end
 end

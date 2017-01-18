@@ -21,6 +21,9 @@ use Mix.Config
 #     config :logger, level: :info
 #
 
+config :door_camera_bot, cowboy_port: 4000
+config :door_camera_bot, page_access_token: System.get_env("PAGE_ACCESS_TOKEN")
+
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
 # by uncommenting the line below and defining dev.exs, test.exs and such.
